@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Collaborative whiteboard</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+            crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    <div class="container">
+        <div class="topBar">
+          <h2 id="rubrik">Collaborative Whiteboard</h2>
+        </div><!-- navbar -->
+        <div class="canvas-holder">
+
+          <div class="popup">
+            <div id="join-form">
+              <form class="form">
+                <p>Enter server ID</p>
+                <input type="text" class="input" id="user-input"/>
+                <br>
+                <button type="button" id="join-room">Join</button>
+              </form>
+            </div>
+
+            <div id="welcome-form">
+              <h1>Welcome !</h1>
+            </div>
+
+            <div id="join">
+              <svg class="lnr lnr-users"><use xlink:href="#lnr-users"></use></svg>
+              <p class="boldtext">Join Room</p>
+            </div>
+
+            <div id="create">
+              <svg class="lnr lnr-file-add"><use xlink:href="#lnr-file-add"></use></svg>
+              <p class="boldtext">Create Room</p>
+            </div>
+          </div> <!-- popup -->
+          <!--
+          <canvas class="canv"></canvas>
+          -->
+        </div><!-- canvas holder -->
+    </div><!-- content container -->
+
+    <div id="overlay" class="back-overlay">
+    </div><!--back overlay -->
+
+    <!-- socket scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+
+    <!-- google linearicons for further use -->
+    <script src="https://cdn.linearicons.com/free/1.0.0/svgembedder.min.js"></script>
+
+  </body>
+</html>
