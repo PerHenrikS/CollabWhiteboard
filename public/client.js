@@ -53,14 +53,6 @@ $("#join").click(function(){
       alert("Enter something");
     }else{
       socket.emit("joinroom", {roomid: $("#user-input").val()});
-      /*
-      $("#join-form").hide();
-      $("#welcome-form").show();
-      setTimeout(function(){
-        $(".popup").hide();
-        $("#overlay").css("display", "none");
-      }, 1000);
-      */
     }
   });
 });
@@ -80,5 +72,17 @@ $("#create").click(function(){
   }, 1000);
 });
 
-//socket on roomjoined ! ! !
-socket.on();
+socket.on("roomjoined", function(){
+  $("#join-form").hide();
+  $("#welcome-form").show();
+
+  initialize();
+
+  setTimeout(function(){
+    $(".popup").hide();
+    $("#overlay").css("display", "none");
+  }, 1000);
+});
+socket.on("nojoin", function(data){
+  alert(data.message);
+});
