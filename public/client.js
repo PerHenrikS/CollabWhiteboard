@@ -18,28 +18,19 @@ function popupScreen(){
   popupbg.style.display="block";
 }
 
-/*
-  Initialize by making n canvases with n different
-  canvas contexts to separate the drawing
+function addCanvas(id){
+  var canv = document.createElement("canvas"),
+      div = document.getElementsByClassName("canvas-holder");
+  context[id] = canv.getContext("2d");
+  canv.id = id;
+  canv.width = WIDTH;
+  canv.height = HEIGHT;
+  canv.style.position = "absolute";
+  canv.style.margin=0;
+  $(div).append(canv);
 
-  n=5 at the moment
-*/
-function initialize(){
-  for(var i=0; i < 5; i++){
-    var canv = document.createElement("canvas"),
-        div = document.getElementsByClassName("canvas-holder");
-    canv.id = "canvas"+i;
-    context[i] = canv.getContext("2d");
-    canv.width = WIDTH;
-    canv.height = HEIGHT;
-    canv.style.zIndex = i;
-    canv.style.position = "absolute";
-    canv.style.margin=0;
-    $(div).append(canv);
-
-    context[i].fillStyle="#ffffff";
-    context[i].fillRect(0,0,WIDTH,HEIGHT);
-  }
+  context[id].fillStyle="#ffffff";
+  context[id].fillRect(0,0,WIDTH,HEIGHT);
 }
 
 $("#join").click(function(){
@@ -63,7 +54,7 @@ $("#create").click(function(){
   $("#create").hide("slide", {direction:"right"}, 300);
   $("#welcome-form").show(400);
 
-  initialize();
+  //initialize();
   socket.emit("createroom");
 
   setTimeout(function(){
@@ -72,17 +63,30 @@ $("#create").click(function(){
   }, 1000);
 });
 
-socket.on("roomjoined", function(){
+socket.on("createresponse", function(data){
+  addCanvas(data.userID);
+});
+
+socket.on("clientjoined", function(data){
+  addCanvas(data.userID);
+  console.log("client joined");
+});
+
+socket.on("roomjoined", function(data){
   $("#join-form").hide();
   $("#welcome-form").show();
 
-  initialize();
+  var arr = Object.values(data.info);
+  for(var i = 0; i < arr.length; i++){
+      addCanvas(arr[i]);
+  }
 
   setTimeout(function(){
     $(".popup").hide();
     $("#overlay").css("display", "none");
   }, 1000);
 });
+
 socket.on("nojoin", function(data){
   alert(data.message);
 });

@@ -44,6 +44,12 @@ body {
   height: 94%;
   margin: 0;
 }
+.canvas-holder:hover{
+  cursor: cell;
+}
+.canvas-holder:active{
+  cursor: crosshair;
+}
 /*VIEW ENDS <--*/
 
 /*CANVAS*/
