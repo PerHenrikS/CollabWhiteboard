@@ -76,15 +76,15 @@ function addMouseMove(id){
       var mouseRelativeY = mouse.y / canvas_array[id].height;
 
       socket.emit("moveto", {mouseposx: mouseRelativeX, mouseposy: mouseRelativeY, who: id});
-      socket.emit("openPath");
+      socket.emit("openPath", {userID: id});
 
       canvas_array[id].addEventListener('mousemove', onPaint, false);
   }, false);
 
   canvas_array[id].addEventListener('mouseup', function() {
       canvas_array[id].removeEventListener('mousemove', onPaint, false);
-      socket.emit("closeDrawing");
-      //context.closePath();
+      socket.emit("closeDrawing", {userID: id});
+      context.closePath();
   }, false);
 }
 
@@ -96,7 +96,7 @@ var onPaint = function() {
     var mouseRelativeX = mouse.x / context[myID].canvas.width;
     var mouseRelativeY = mouse.y / context[myID].canvas.height;
 
-    socket.emit("drawing", {posX: mouseRelativeX, posY: mouseRelativeY});
+    socket.emit("drawing", {posX: mouseRelativeX, posY: mouseRelativeY, userID: myID});
 };
 
 
@@ -163,25 +163,25 @@ socket.on("nojoin", function(data){
   alert(data.message);
 });
 
-socket.on("begin", function(){
-  context[myID].beginPath();
+socket.on("begin", function(data){
+  context[data.user].beginPath();
 });
 
-socket.on("endPath", function(){
-  context[myID].closePath();
+socket.on("endPath", function(data){
+  context[data.user].closePath();
 });
 
 socket.on("moveResponse", function(data){
-    var relativePosX = data.mouseX * canvas_array[myID].width;
-    var relativePosY = data.mouseY * canvas_array[myID].height;
+    var relativePosX = data.mouseX * canvas_array[data.user].width;
+    var relativePosY = data.mouseY * canvas_array[data.user].height;
 
-    context[myID].moveTo(relativePosX, relativePosY);
+    context[data.user].moveTo(relativePosX, relativePosY);
 });
 
 socket.on("drawResponse", function(data){
-    var relativePosX = data.cmouseX * canvas_array[myID].width;
-    var relativePosY = data.cmouseY * canvas_array[myID].height;
+    var relativePosX = data.cmouseX * canvas_array[data.user].width;
+    var relativePosY = data.cmouseY * canvas_array[data.user].height;
 
-    context[myID].lineTo(relativePosX, relativePosY);
-    context[myID].stroke();
+    context[data.user].lineTo(relativePosX, relativePosY);
+    context[data.user].stroke();
 });

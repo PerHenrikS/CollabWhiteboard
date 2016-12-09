@@ -59,23 +59,23 @@ io.on("connection", function(socket){
     //delete rooms[socketRoom][socketNumber];
   });
 
-  socket.on("closeDrawing", function(){
+  socket.on("closeDrawing", function(data){
   //console.log("Close path");
-  socket.to(socket.room).emit("endPath");
+  socket.to(socket.room).emit("endPath", {user: data.userID});
   });
 
   socket.on("moveto", function(data){
-   socket.to(socket.room).emit("moveResponse", {mouseX: data.mouseposx, mouseY: data.mouseposy});
+   socket.to(socket.room).emit("moveResponse", {mouseX: data.mouseposx, mouseY: data.mouseposy, user: data.who});
   });
 
   socket.on("drawing", function(data){
     //console.log(socketNumber + " is drawing");
-     socket.to(socket.room).emit("drawResponse", {cmouseX: data.posX, cmouseY: data.posY});
+     socket.to(socket.room).emit("drawResponse", {cmouseX: data.posX, cmouseY: data.posY, user: data.userID});
   });
 
-  socket.on("openPath", function(){
+  socket.on("openPath", function(data){
    //console.log("Begin path");
-   socket.to(socket.room).emit("begin");
+   socket.to(socket.room).emit("begin", {user: data.userID};
  });
 
   socket.on("createroom", function(){
