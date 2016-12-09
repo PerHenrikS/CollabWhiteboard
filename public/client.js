@@ -63,7 +63,7 @@ function addCanvas(id){
 
 function addMouseMove(id){
   canvas_array[id].addEventListener("mousemove", function(e){
-        var position = getMousePosScale(canvas_array[myID], e);
+        var position = getMousePosScale(canvas_array[id], e);
         mouse.x = position.x;
         mouse.y = position.y;
   });
