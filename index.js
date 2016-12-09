@@ -59,6 +59,25 @@ io.on("connection", function(socket){
     //delete rooms[socketRoom][socketNumber];
   });
 
+  socket.on("closeDrawing", function(){
+  //console.log("Close path");
+  socket.to(socket.room).emit("endPath");
+  });
+
+  socket.on("moveto", function(data){
+   socket.to(socket.room).emit("moveResponse", {mouseX: data.mouseposx, mouseY: data.mouseposy});
+  });
+
+  socket.on("drawing", function(data){
+    //console.log(socketNumber + " is drawing");
+     socket.to(socket.room).emit("drawResponse", {cmouseX: data.posX, cmouseY: data.posY});
+  });
+
+  socket.on("openPath", function(){
+   //console.log("Begin path");
+   socket.to(socket.room).emit("begin");
+ });
+
   socket.on("createroom", function(){
     var roomName = generateID();
     socket.room = roomName;
@@ -94,7 +113,7 @@ io.on("connection", function(socket){
 
       socket.to(socketRoom).emit("clientjoined", {userID: socketNumber});
 
-      socket.emit("roomjoined", {info: Object.keys(rooms[socketRoom])});
+      socket.emit("roomjoined", {info: Object.keys(rooms[socketRoom]), ownID: socketNumber});
 
     }else{
       var msg = "something wrong";

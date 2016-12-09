@@ -18,7 +18,7 @@ body {
   width: 100%;
   height: 100%;
   /*background-color: #F5F1DE;*/
-  background-color: #D7D9D7;
+  background-color: white;
 }
 
 /*Styling for all elements inside the topbar*/
@@ -53,9 +53,8 @@ body {
 /*VIEW ENDS <--*/
 
 /*CANVAS*/
-.canv{
-  width: 100%;
-  height: 95%;
+.canvNoEvent{
+  pointer-events: none;
 }
 /*CANVAS ENDS*/
 
