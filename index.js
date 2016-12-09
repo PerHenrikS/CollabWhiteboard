@@ -75,7 +75,7 @@ io.on("connection", function(socket){
 
   socket.on("openPath", function(data){
    //console.log("Begin path");
-   socket.to(socket.room).emit("begin", {user: data.userID};
+   socket.to(socket.room).emit("begin", {user: data.userID});
  });
 
   socket.on("createroom", function(){
