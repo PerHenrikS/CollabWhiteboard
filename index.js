@@ -4,14 +4,12 @@ var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var Dict = require("collections/dict");
+//var router = express.Router();
 
 var dictionary = new Dict();
 var users = new Dict();
 
 var rooms = [];
-//var clients = [];
-//var canvases = [];
-//var users = {};
 
 app.use(express.static(__dirname + "/public"));
 
@@ -55,8 +53,26 @@ io.on("connection", function(socket){
   console.log("Client has connected to the server");
 
   socket.on("disconnect", function(reason){
-    console.log("socket room " + socketRoom + " socket number " + socketNumber);
-    //delete rooms[socketRoom][socketNumber];
+    try{
+      console.log("Delete room if its empty");
+      /*
+      On disconnect delete room only if its empty. 
+
+      if(rooms[socketRoom].length == 1){
+        delete rooms[socketRoom][socketNumber];
+        dictionary.delete(socketRoom);
+        console.log("Room " + socketRoom + " destroyed");
+      }
+      else{
+        delete rooms[socketRoom][socketNumber];
+        console.log(clientCount);
+        console.log("Deleted socket number " + socketNumber);
+      }
+      */
+    }catch(err){
+      //console.log(err);
+      //No room to destroy ? 
+    }
   });
 
   socket.on("closeDrawing", function(data){
@@ -87,9 +103,7 @@ io.on("connection", function(socket){
     socketNumber = socket.userNumber;
 
     dictionary.add(roomName, roomName);
-    //var users = [];
-    //users[socketNumber] = socketNumber;
-    //rooms[socket.room] = users;
+
     var canvases = [];
     canvases[socketNumber] = socketNumber;
     rooms[socket.room] = canvases;
@@ -97,6 +111,7 @@ io.on("connection", function(socket){
     //console.log(rooms[socket.room]);
     console.log("Room with ID " + socketRoom + " created");
     socket.emit("createresponse", {userID: socketNumber});
+
   });
 
   socket.on("joinroom", function(data){
@@ -104,7 +119,6 @@ io.on("connection", function(socket){
       socket.room = data.roomid;
       socket.join(socket.room);
       var numb = generateUID();
-      //var numb = firstfree(0, data.roomid);
       socket.userNumber = numb;
       socketRoom = data.roomid;
       socketNumber = numb;
@@ -116,7 +130,7 @@ io.on("connection", function(socket){
       socket.emit("roomjoined", {info: Object.keys(rooms[socketRoom]), ownID: socketNumber});
 
     }else{
-      var msg = "something wrong";
+      var msg = "Room does not exist";
 
       socket.emit("nojoin", {message: msg});
     }

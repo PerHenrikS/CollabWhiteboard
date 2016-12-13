@@ -9,8 +9,13 @@ var context = [];
 
 var myID;
 
+var tools = false; 
+var usebar = false; 
+var menu = false; 
+
 window.onload = function(){
   popupScreen();
+  $(".sidebar").hide();
 }
 
 //Function to change mouse position relative to canvas size
@@ -55,7 +60,7 @@ function addCanvas(id){
   $(div).append(canv);
 
   context[id].fillStyle="#ffffff";
-  context[id].lineWidth = 5;
+  context[id].lineWidth = 3;
   context[id].lineJoin = "round";
   context[id].lineCap = "round";
   //context[id].fillRect(0,0,WIDTH,HEIGHT);
@@ -84,7 +89,8 @@ function addMouseMove(id){
   canvas_array[id].addEventListener('mouseup', function() {
       canvas_array[id].removeEventListener('mousemove', onPaint, false);
       socket.emit("closeDrawing", {userID: id});
-      context.closePath();
+      //context.closePath();
+      //THIS MIGHT BRAKE COLLAB DRAWING TEST ! 
   }, false);
 }
 
@@ -99,11 +105,58 @@ var onPaint = function() {
     socket.emit("drawing", {posX: mouseRelativeX, posY: mouseRelativeY, userID: myID});
 };
 
+$("#iconbuttontools").click(function(){
+  if(!tools){
+    usebar = false; 
+    menu = false; 
+    $("#menu").hide("slide", {direction: "down"});
+    $("#users").hide("slide", {direction: "down"});
+    $("#tools").show("slide", {direction: "up"});
+    tools = true; 
+  }else{
+    $("#tools").hide("slide", {direction: "down"});
+    tools = false; 
+  }
+});
+
+$("#iconbuttonusers").click(function(){
+  if(!usebar){
+    menu = false;  
+    tools = false; 
+    $("#menu").hide("slide", {direction: "down"});
+    $("#tools").hide("slide", {direction: "down"});
+    $("#users").show("slide", {direction: "up"});
+    usebar = true; 
+  }else{
+    $("#users").hide("slide", {direction: "down"});
+    usebar = false; 
+  }
+});
+
+$("#iconbuttonfile").click(function(){
+  if(!menu){
+    usebar = false;  
+    tools = false; 
+    $("#users").hide("slide", {direction: "down"});
+    $("#tools").hide("slide", {direction: "down"});
+    $("#menu").show("slide", {direction: "up"});
+    menu = true; 
+  }else{
+    $("#menu").hide("slide", {direction: "down"});
+    menu = false; 
+  }
+});
 
 $("#join").click(function(){
   $("#join").hide("slide", {direction:"left"}, 300);
   $("#create").hide("slide", {direction:"right"}, 300);
   $("#join-form").show(400);
+
+  $("#join-cancel").click(function(){
+    $("#join").show("slide", {direction:"right"}, 300);
+    $("#create").show("slide", {direction:"left"}, 300);
+    $("#join-form").hide(400);
+  });
 
   $("#join-room").click(function(){
     var user_input = $("#user-input").val();
@@ -157,6 +210,23 @@ socket.on("roomjoined", function(data){
     $(".popup").hide();
     $("#overlay").css("display", "none");
   }, 1000);
+});
+
+socket.on("instajoin", function(data){
+  $("#join-form").hide();
+
+  myID = data.ownID;
+  var arr = Object.values(data.info);
+  for(var i = 0; i < arr.length; i++){
+      addCanvas(arr[i]);
+  }
+
+  addMouseMove(data.ownID);
+
+
+  $(".popup").hide();
+  $("#overlay").css("display", "none");
+
 });
 
 socket.on("nojoin", function(data){

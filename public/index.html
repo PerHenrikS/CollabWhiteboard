@@ -13,6 +13,26 @@
     <div class="container">
         <div class="topBar">
           <h2 id="rubrik">Collaborative Whiteboard</h2>
+
+          <div id="nav">
+            <!-- Tools -->
+            <div class="tooltip iconbutton" id="iconbuttontools">
+              <svg class="lnr lnr-pencil" id="icon"><use xlink:href="#lnr-pencil"></use>
+              <span class="tooltiptext">Tools</span></svg>
+            </div>
+
+            <!-- Users -->
+            <div class="tooltip iconbutton" id="iconbuttonusers">
+              <svg class="lnr lnr-users" id="icon"><use xlink:href="#lnr-users"></use></svg>
+              <span class="tooltiptext">Users</span></svg>
+            </div>
+
+            <div class="tooltip iconbutton" id="iconbuttonfile">
+              <svg class="lnr lnr-menu" id="icon"><use xlink:href="#lnr-menu"></use></svg>
+              <span class="tooltiptext">File</span></svg>
+            </div>
+
+          </div>
         </div><!-- navbar -->
         <div class="canvas-holder">
 
@@ -22,6 +42,7 @@
                 <p>Enter server ID</p>
                 <input type="text" class="input" id="user-input"/>
                 <br>
+                <button type="button" id="join-cancel">Cancel</button>
                 <button type="button" id="join-room">Join</button>
               </form>
             </div>
@@ -31,15 +52,28 @@
             </div>
 
             <div id="join">
-              <svg class="lnr lnr-users"><use xlink:href="#lnr-users"></use></svg>
+              <svg class="lnr lnr-users" id="bigbutton"><use xlink:href="#lnr-users"></use></svg>
               <p class="boldtext">Join Room</p>
             </div>
 
             <div id="create">
-              <svg class="lnr lnr-file-add"><use xlink:href="#lnr-file-add"></use></svg>
+              <svg class="lnr lnr-file-add" id="bigbutton"><use xlink:href="#lnr-file-add"></use></svg>
               <p class="boldtext">Create Room</p>
             </div>
           </div> <!-- popup -->
+          
+          <div class="sidebar" id="tools">
+            <h2 id="siderub">Tools</h2>
+          </div>
+
+          <div class="sidebar" id="users">
+            <h2 id="siderub">Users</h2>
+          </div>
+
+          <div class="sidebar" id="menu">
+            <h2 id="siderub">File</h2>
+          </div>
+          <!-- sidebar ends -->
           <!--
           <canvas class="canv"></canvas>
           -->
