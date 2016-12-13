@@ -4,7 +4,6 @@ var app = express();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
 var Dict = require("collections/dict");
-//var router = express.Router();
 
 var dictionary = new Dict();
 var users = new Dict();
@@ -17,12 +16,21 @@ app.get("/", function(req,res){
   res.sendFile(__dirname + "/public/index.html");
 });
 
+app.get("/:id", function(req, res){
+  var roomid = req.params.id; 
+  if(dictionary.has(roomid)){
+    res.sendFile(__dirname + "/public/index.html");
+  }else{
+    res.redirect("/");
+  }
+});
+
 http.listen(3000, function(){
   console.log("Server listening on localhost port: 3000");
 });
 
 function generateID(){
-  var id = Math.random().toString(36).substr(2,10);
+  var id = Math.random().toString(36).substr(2,20);
   if(dictionary.has(id)){
     return generateID();
   }else{
@@ -31,7 +39,7 @@ function generateID(){
 }
 
 function generateUID(){
-  var id = Math.random().toString(36).substr(2,20);
+  var id = Math.random().toString(36).substr(2,10);
   if(users.has(id)){
     return generateUID();
   }else{
@@ -51,29 +59,17 @@ io.on("connection", function(socket){
   var socketRoom;
   var socketNumber;
   console.log("Client has connected to the server");
+  //console.log(socket.handshake.url);
 
   socket.on("disconnect", function(reason){
     try{
       console.log("Delete room if its empty");
-      /*
-      On disconnect delete room only if its empty. 
-
-      if(rooms[socketRoom].length == 1){
-        delete rooms[socketRoom][socketNumber];
-        dictionary.delete(socketRoom);
-        console.log("Room " + socketRoom + " destroyed");
-      }
-      else{
-        delete rooms[socketRoom][socketNumber];
-        console.log(clientCount);
-        console.log("Deleted socket number " + socketNumber);
-      }
-      */
     }catch(err){
       //console.log(err);
       //No room to destroy ? 
     }
   });
+
 
   socket.on("closeDrawing", function(data){
   //console.log("Close path");
@@ -94,6 +90,24 @@ io.on("connection", function(socket){
    socket.to(socket.room).emit("begin", {user: data.userID});
  });
 
+
+//Really hacky solution. (its shit)
+ socket.on("myurl", function(data){
+    if(dictionary.has(data.roomURL)){
+      socket.room = data.roomURL;
+      socket.join(socket.room);
+      var numb = generateUID();
+      socket.userNumber = numb;
+      socketRoom = data.roomURL;
+      socketNumber = numb;
+
+      rooms[socketRoom][socketNumber] = numb;
+
+      socket.to(socketRoom).emit("clientjoined", {userID: socketNumber});
+      socket.emit("instajoin", {ownID: numb, info: Object.keys(rooms[socketRoom])});
+   }
+});
+
   socket.on("createroom", function(){
     var roomName = generateID();
     socket.room = roomName;
@@ -108,10 +122,8 @@ io.on("connection", function(socket){
     canvases[socketNumber] = socketNumber;
     rooms[socket.room] = canvases;
 
-    //console.log(rooms[socket.room]);
     console.log("Room with ID " + socketRoom + " created");
-    socket.emit("createresponse", {userID: socketNumber});
-
+    socket.emit("createresponse", {userID: socketNumber, roomID: roomName});
   });
 
   socket.on("joinroom", function(data){

@@ -16,6 +16,7 @@ var menu = false;
 window.onload = function(){
   popupScreen();
   $(".sidebar").hide();
+  socket.emit("myurl", {roomURL: window.location.href.split("/").pop()});
 }
 
 //Function to change mouse position relative to canvas size
@@ -109,12 +110,12 @@ $("#iconbuttontools").click(function(){
   if(!tools){
     usebar = false; 
     menu = false; 
-    $("#menu").hide("slide", {direction: "down"});
-    $("#users").hide("slide", {direction: "down"});
+    $("#menu").hide("slide", {direction: "up"});
+    $("#users").hide("slide", {direction: "up"});
     $("#tools").show("slide", {direction: "up"});
     tools = true; 
   }else{
-    $("#tools").hide("slide", {direction: "down"});
+    $("#tools").hide("slide", {direction: "up"});
     tools = false; 
   }
 });
@@ -123,12 +124,12 @@ $("#iconbuttonusers").click(function(){
   if(!usebar){
     menu = false;  
     tools = false; 
-    $("#menu").hide("slide", {direction: "down"});
-    $("#tools").hide("slide", {direction: "down"});
+    $("#menu").hide("slide", {direction: "up"});
+    $("#tools").hide("slide", {direction: "up"});
     $("#users").show("slide", {direction: "up"});
     usebar = true; 
   }else{
-    $("#users").hide("slide", {direction: "down"});
+    $("#users").hide("slide", {direction: "up"});
     usebar = false; 
   }
 });
@@ -137,12 +138,12 @@ $("#iconbuttonfile").click(function(){
   if(!menu){
     usebar = false;  
     tools = false; 
-    $("#users").hide("slide", {direction: "down"});
-    $("#tools").hide("slide", {direction: "down"});
+    $("#users").hide("slide", {direction: "up"});
+    $("#tools").hide("slide", {direction: "up"});
     $("#menu").show("slide", {direction: "up"});
     menu = true; 
   }else{
-    $("#menu").hide("slide", {direction: "down"});
+    $("#menu").hide("slide", {direction: "up"});
     menu = false; 
   }
 });
@@ -187,6 +188,7 @@ socket.on("createresponse", function(data){
   myID = data.userID;
   addCanvas(data.userID);
   addMouseMove(data.userID);
+  window.history.pushState(null, null, data.roomID);
 });
 
 socket.on("clientjoined", function(data){
