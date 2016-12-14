@@ -13,10 +13,15 @@ var tools = false;
 var usebar = false; 
 var menu = false; 
 
+
+var clip = new Clipboard('#copyid');
+
+
 window.onload = function(){
   popupScreen();
   $(".sidebar").hide();
 }
+
 
 //Function to change mouse position relative to canvas size
 function getMousePosScale(canvas, evt){
@@ -187,7 +192,7 @@ socket.on("createresponse", function(data){
   myID = data.userID;
   addCanvas(data.userID);
   addMouseMove(data.userID);
-  window.history.pushState(null, null, data.roomID);
+  $("#idbox").val(data.roomID);
 });
 
 socket.on("clientjoined", function(data){

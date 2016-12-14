@@ -7,6 +7,7 @@
     <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
             integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
             crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.16/clipboard.min.js"></script>
   </head>
 
   <body>
@@ -68,6 +69,14 @@
 
           <div class="sidebar" id="users">
             <h2 id="siderub">Users</h2>
+
+            <p>Room ID</p>
+            <input id="idbox" type="text" name="country" readonly>
+            <button id="copyid" data-clipboard-target="#idbox">Copy ID</button>
+            <br>
+            <ul id="connected">
+
+            </ul>
           </div>
 
           <div class="sidebar" id="menu">
@@ -89,6 +98,5 @@
 
     <!-- google linearicons for further use -->
     <script src="https://cdn.linearicons.com/free/1.0.0/svgembedder.min.js"></script>
-
   </body>
 </html>
