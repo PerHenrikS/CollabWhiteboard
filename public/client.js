@@ -16,7 +16,6 @@ var menu = false;
 window.onload = function(){
   popupScreen();
   $(".sidebar").hide();
-  socket.emit("myurl", {roomURL: window.location.href.split("/").pop()});
 }
 
 //Function to change mouse position relative to canvas size
@@ -212,23 +211,6 @@ socket.on("roomjoined", function(data){
     $(".popup").hide();
     $("#overlay").css("display", "none");
   }, 1000);
-});
-
-socket.on("instajoin", function(data){
-  $("#join-form").hide();
-
-  myID = data.ownID;
-  var arr = Object.values(data.info);
-  for(var i = 0; i < arr.length; i++){
-      addCanvas(arr[i]);
-  }
-
-  addMouseMove(data.ownID);
-
-
-  $(".popup").hide();
-  $("#overlay").css("display", "none");
-
 });
 
 socket.on("nojoin", function(data){

@@ -16,15 +16,6 @@ app.get("/", function(req,res){
   res.sendFile(__dirname + "/public/index.html");
 });
 
-app.get("/:id", function(req, res){
-  var roomid = req.params.id; 
-  if(dictionary.has(roomid)){
-    res.sendFile(__dirname + "/public/index.html");
-  }else{
-    res.redirect("/");
-  }
-});
-
 http.listen(3000, function(){
   console.log("Server listening on localhost port: 3000");
 });
@@ -59,7 +50,6 @@ io.on("connection", function(socket){
   var socketRoom;
   var socketNumber;
   console.log("Client has connected to the server");
-  //console.log(socket.handshake.url);
 
   socket.on("disconnect", function(reason){
     try{
@@ -89,24 +79,6 @@ io.on("connection", function(socket){
    //console.log("Begin path");
    socket.to(socket.room).emit("begin", {user: data.userID});
  });
-
-
-//Really hacky solution. (its shit)
- socket.on("myurl", function(data){
-    if(dictionary.has(data.roomURL)){
-      socket.room = data.roomURL;
-      socket.join(socket.room);
-      var numb = generateUID();
-      socket.userNumber = numb;
-      socketRoom = data.roomURL;
-      socketNumber = numb;
-
-      rooms[socketRoom][socketNumber] = numb;
-
-      socket.to(socketRoom).emit("clientjoined", {userID: socketNumber});
-      socket.emit("instajoin", {ownID: numb, info: Object.keys(rooms[socketRoom])});
-   }
-});
 
   socket.on("createroom", function(){
     var roomName = generateID();
