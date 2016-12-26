@@ -1,5 +1,6 @@
 # CollabWhiteboard
-Small collaborative whiteboard to test nodejs and socketio
+Small collaborative whiteboard to test nodejs and socketio. 
+_Alot of functionality is not yet implemented_
 
 This project requires nodejs. 
 
