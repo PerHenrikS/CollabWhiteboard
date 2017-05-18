@@ -10,6 +10,9 @@ var users = new Dict();
 
 var rooms = [];
 
+var port = process.env.PORT || 8080; 
+
+
 app.use(express.static(__dirname + "/public"));
 
 app.get("/", function(req,res){
@@ -25,8 +28,8 @@ app.get("/:id", function(req, res){
   }
 });
 
-http.listen(3000, function(){
-  console.log("Server listening on localhost port: 3000");
+http.listen(port, function(){
+  console.log("Server listening on port: " + port);
 });
 
 function generateID(){
